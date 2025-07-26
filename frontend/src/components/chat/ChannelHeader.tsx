@@ -9,7 +9,7 @@ interface ChannelHeaderProps {
 
 export function ChannelHeader({ channel }: ChannelHeaderProps) {
   const getChannelIcon = () => {
-    return channel.type === 'voice' ? (
+    return channel.channelType === 'voice' ? (
       <Volume2 className="w-5 h-5" />
     ) : (
       <Hash className="w-5 h-5" />
