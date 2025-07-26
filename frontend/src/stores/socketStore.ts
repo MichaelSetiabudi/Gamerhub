@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { io, Socket } from 'socket.io-client';
 import { User, VoiceState, TypingUser, Message } from '@/types';
 import toast from 'react-hot-toast';
+import { useMessageStore } from './messageStore';
 
 interface SocketState {
   socket: Socket | null;
@@ -134,26 +135,20 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         channel: message.channel,
         timestamp: message.createdAt
       });
-      // Import messageStore dynamically to avoid circular dependency
-      import('../stores/messageStore').then(({ useMessageStore }) => {
-        const { addMessage } = useMessageStore.getState();
-        addMessage(message);
-        console.log('✅ Message added to store via socket');
-      });
+      // Add message to store
+      const { addMessage } = useMessageStore.getState();
+      addMessage(message);
+      console.log('✅ Message added to store via socket');
     });
 
     socket.on('messageUpdated', (message: Message) => {
       console.log('✏️ Message updated:', message);
-      import('../stores/messageStore').then(({ useMessageStore }) => {
-        useMessageStore.getState().updateMessage(message);
-      });
+      useMessageStore.getState().updateMessage(message);
     });
 
     socket.on('messageDeleted', (messageId: string) => {
       console.log('🗑️ Message deleted:', messageId);
-      import('../stores/messageStore').then(({ useMessageStore }) => {
-        useMessageStore.getState().removeMessage(messageId);
-      });
+      useMessageStore.getState().removeMessage(messageId);
     });
 
     // Error events
@@ -209,12 +204,10 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       socket.emit('joinChannel', { channelId: newChannelId });
       
       // Clear messages from message store for the new channel
-      import('../stores/messageStore').then(({ useMessageStore }) => {
-        const { clearMessages, fetchMessages } = useMessageStore.getState();
-        console.log('🧹 Clearing messages and fetching for new channel');
-        clearMessages();
-        fetchMessages(newChannelId);
-      });
+      const { clearMessages, fetchMessages } = useMessageStore.getState();
+      console.log('🧹 Clearing messages and fetching for new channel');
+      clearMessages();
+      fetchMessages(newChannelId);
     } else {
       console.error('❌ Cannot switch channel: socket not connected');
     }
