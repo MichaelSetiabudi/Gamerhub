@@ -71,7 +71,12 @@
   }
   
   .gaming-text {
-    @apply bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-400 dark:to-secondary-400 bg-clip-text text-transparent;
+  }
+  
+  /* Light mode specific gradients */
+  .light .gaming-gradient {
+    @apply bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600;
   }
   
   /* Status indicators */
@@ -98,6 +103,15 @@
   
   .channel-item.active {
     @apply bg-primary-100 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400;
+  }
+  
+  /* Light mode enhancements */
+  .light-card {
+    @apply bg-white/90 backdrop-blur-sm border border-gray-200 shadow-lg;
+  }
+  
+  .light-gradient-bg {
+    @apply bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50;
   }
   
   /* Message styles */
